@@ -4,49 +4,59 @@
   <meta charset="UTF-8" />
   <title>INTERPF - Ficha de Ingreso y Seguimiento DBT2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Estilos embebidos (Century Gothic + estética aireada) -->
   <style>
+  /* ========= THEME (dark por defecto, light opcional con body.light) ========= */
   :root{
-    --bg:#0f1420; --panel:#111a28; --panel-2:#0d1522; --text:#eef3f7; --muted:#9fb1c4; --line:#1c2a3d;
-    --accent:#69b4ff; --accent-strong:#a8d4ff; /* Títulos AZUL por defecto */
+    --bg:#0f1420; --panel:#111a28; --panel-2:#0d1522;
+    --text:#eef3f7; --muted:#9fb1c4; --line:#1c2a3d;
+    --accent:#69b4ff; --accent-strong:#a8d4ff;
     --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
   }
-  body.accent-green{ --accent:#5eead4; --accent-strong:#99f6e4; } /* Títulos VERDES si agregás esta clase */
+  body.light{
+    --bg:#f5f8fc; --panel:#ffffff; --panel-2:#f7f9fb;
+    --text:#101820; --muted:#4b5563; --line:#d6dee7;
+    --accent:#0b72ff; --accent-strong:#0753bf;
+  }
+  /* cambiar a títulos verdes agregando class="accent-green" al body */
+  body.accent-green{ --accent:#2dd4bf; --accent-strong:#0ea5a3; }
 
+  /* ========= TIPOGRAFÍA ========= */
   @font-face{
     font-family:"Century Gothic";
     src: local("Century Gothic"), local("CenturyGothic");
-    font-weight: 300 700;
-    font-style: normal;
-    font-display: swap;
+    font-weight:300 700; font-style:normal; font-display:swap;
   }
 
-  *{ box-sizing:border-box }
+  *{ box-sizing: border-box }
   html,body{ height:100% }
   body{
     margin:0; background:var(--bg); color:var(--text);
     font-family:"Century Gothic","CenturyGothic","AppleGothic","URW Gothic L","Avant Garde",Arial,sans-serif;
     line-height:1.55; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    transition: background .3s ease, color .3s ease;
   }
 
   .container{ max-width:1100px; margin:28px auto; padding:0 18px }
   .card{
-    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
     border:1px solid var(--line); border-radius:18px; padding:24px;
-    margin:20px 0 26px; box-shadow:0 14px 28px rgba(0,0,0,.24), 0 10px 10px rgba(0,0,0,.18)
+    margin:20px 0 26px;
+    box-shadow:0 14px 28px rgba(0,0,0,.18), 0 10px 10px rgba(0,0,0,.1);
+    transition: background .3s, border .3s, box-shadow .3s;
   }
 
+  /* ========= HEADER ========= */
   .app-header{
     display:flex; align-items:center; justify-content:space-between; gap:14px;
     padding:16px 18px; border-bottom:1px solid var(--line);
-    background:rgba(0,0,0,.18); backdrop-filter:blur(4px)
+    background:rgba(0,0,0,.1); backdrop-filter: blur(4px);
   }
-  .app-header h1{ font-size:22px; font-weight:700; letter-spacing:.2px; margin:0; color:var(--accent-strong) }
-  .header-actions{ display:flex; gap:10px }
+  .app-header h1{ font-size:22px; font-weight:700; margin:0; color:var(--accent-strong) }
+  .header-actions{ display:flex; gap:10px; align-items:center }
 
+  /* ========= TITULARES ========= */
   h2{ margin:0 0 14px; font-size:20px; font-weight:700; letter-spacing:.2px; color:var(--accent) }
   h3{ margin:18px 0 12px; font-size:16px; font-weight:700; color:var(--accent-strong) }
-
   .title-right{
     display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 0 12px
   }
@@ -60,17 +70,21 @@
   .muted{ color:var(--muted); font-size:13px }
   hr{ border:none; border-top:1px solid var(--line); margin:20px 0 10px }
 
+  /* ========= FORM ========= */
   label{ display:flex; flex-direction:column; gap:8px; font-size:13px; align-items:flex-start }
   input,select,textarea{
     width:100%; background:#0a1322; border:1px solid var(--line); color:var(--text);
     padding:12px 12px; border-radius:12px; font-size:14px;
-    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease
+    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
   }
-  input::placeholder,textarea::placeholder{ color:#8aa0b4a0 }
-  input:focus,select:focus,textarea:focus{
-    outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(105,180,255,.18); background:#0c1830
+  body.light input, body.light select, body.light textarea{
+    background:#fff; color:#0b1220; border:1px solid #d1dae3;
   }
-  textarea{ min-height:96px; resize:vertical }
+  input::placeholder, textarea::placeholder{ color:#8aa0b4a0 }
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(105,180,255,.18); background:#0c1830;
+  }
+  body.light input:focus, body.light select:focus, body.light textarea:focus{ background:#f0f6ff; }
 
   .grid2,.grid3,.grid4{ align-items:start }
   .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px 16px }
@@ -79,38 +93,50 @@
   .inline{ display:flex; align-items:center; gap:10px }
   .chk{ display:flex; align-items:center; gap:10px }
 
+  /* ========= KPIs ========= */
   #kpis .kpi-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px }
   .kpi{ background:#0a1322; border:1px solid var(--line); border-radius:14px; padding:14px }
+  body.light .kpi{ background:#ffffff; }
   .kpi span{ display:block; color:#bfd3e4; font-size:12px; margin-bottom:6px }
+  body.light .kpi span{ color:#5b7088; }
   .kpi strong{ font-size:22px; letter-spacing:.3px }
-  .flag{ float:right; padding:4px 10px; border-radius:999px; border:1px solid var(--line); font-size:12px; margin-top:-2px }
+  .flag{
+    float:right; padding:4px 10px; border-radius:999px; border:1px solid var(--line);
+    font-size:12px; margin-top:-2px;
+  }
   .flag.green{ background:rgba(34,197,94,.16); border-color:#14532d }
   .flag.red{ background:rgba(239,68,68,.16); border-color:#7f1d1d }
   .flag.gray{ background:#0a1322 }
+  body.light .flag.gray{ background:#fff }
 
+  /* ========= BOTONES ========= */
   button{
     appearance:none; background:#132136; color:var(--text); border:1px solid var(--line);
-    padding:10px 14px; border-radius:12px; cursor:pointer;
-    transition:transform .05s, filter .15s, background .15s
+    padding:8px 14px; border-radius:12px; cursor:pointer;
+    transition: transform .05s, filter .15s, background .15s;
   }
+  body.light button{ background:#edf2fa; color:#111; border:1px solid #cfd9e6; }
   button:hover{ filter:brightness(1.08) }
-  button:active{ transform:translateY(1px) }
-  button.primary{ background:var(--accent); color:#07111f; border-color:transparent; font-weight:700 }
-  button.danger{ background:var(--danger); color:#fff; border-color:transparent }
+  button:active{ transform: translateY(1px) }
+  button.primary{ background:var(--accent); color:#fff; border-color:transparent; font-weight:700 }
   .actions{ display:flex; gap:12px; margin-top:10px; flex-wrap:wrap }
 
+  /* ========= MEDICACIÓN ========= */
   .medication-list-vertical{ display:grid; gap:10px }
   .med-item{
     display:grid; grid-template-columns:26px 1fr 200px 140px;
     align-items:center; gap:12px; padding:12px 14px;
     border:1px dashed var(--line); border-radius:12px; background:rgba(255,255,255,0.02)
   }
-  .med-item label{ margin:0 }
+  body.light .med-item{ background:#fcfdff; }
+
   .input-dosis,.input-frec{ width:100% }
 
+  /* ========= TEXTAREAS AMPLIAS ========= */
   .textarea-wide{ min-height:140px }
   .full-width{ grid-column:1 / -1 }
 
+  /* ========= PRINT ========= */
   .only-print{ display:none }
   @media print{
     .no-print{ display:none!important }
@@ -122,8 +148,13 @@
     .only-print{ display:block }
     .print-footer{ margin:14px 16px; font-size:12px; color:#333 }
   }
+
+  /* ========= RESPONSIVE ========= */
   @media (max-width:1080px){ .grid4{ grid-template-columns:repeat(2,1fr) } }
-  @media (max-width:860px){ .grid3{ grid-template-columns:1fr 1fr } #kpis .kpi-grid{ grid-template-columns:1fr 1fr } }
+  @media (max-width:860px){
+    .grid3{ grid-template-columns:1fr 1fr }
+    #kpis .kpi-grid{ grid-template-columns:1fr 1fr }
+  }
   @media (max-width:640px){
     .grid2,.grid3,.grid4{ grid-template-columns:1fr }
     .med-item{ grid-template-columns:26px 1fr }
@@ -136,8 +167,9 @@
 <header class="app-header no-print">
   <h1>INTERPF · Ficha de Ingreso y Seguimiento DBT2 (Dr. Giorgini)</h1>
   <div class="header-actions">
-    <button type="button" id="btn-save">Guardar</button>
-    <button type="button" id="btn-print">Imprimir / PDF</button>
+    <button id="btn-theme" title="Cambiar modo">🌙</button>
+    <button type="button" id="btn-save">💾 Guardar</button>
+    <button type="button" id="btn-print">🖨️ Imprimir / PDF</button>
   </div>
 </header>
 
@@ -251,7 +283,6 @@
     <h2>D. Tratamiento actual (lista detallada)</h2>
     <p class="muted">Marque las drogas que usa el paciente y complete dosis y frecuencia.</p>
 
-    <!-- Lista de drogas -->
     <div class="medication-list-vertical">
       <h3>1. Hipoglucemiantes Orales</h3>
       <div class="med-item"><input type="checkbox" id="metf"><label for="metf">Metformina (Biguanida)</label><input type="text" placeholder="Dosis (mg)" class="input-dosis"><input type="number" placeholder="Veces/día" class="input-frec"></div>
@@ -336,7 +367,9 @@
     <h2>F. Plan de seguimiento</h2>
     <div class="grid3">
       <label>Tipo de control
-        <select id="tipo-ctrl" name="tipo-ctrl"><option>Presencial</option><option>Virtual (Zoom/Video)</option><option>Mail</option></select>
+        <select id="tipo-ctrl" name="tipo-ctrl">
+          <option>Presencial</option><option>Virtual (Zoom/Video)</option><option>Mail</option>
+        </select>
       </label>
       <label>Fecha de control (alarma)<input id="prox" name="prox" type="date" required></label>
       <label>Estado<input id="estado" type="text" readonly></label>
@@ -362,18 +395,33 @@
   <p>INTERPF – Seguimiento DBT2 · Dr. Julio C. Giorgini</p>
 </footer>
 
-<!-- Lógica: cálculos, semáforos, autosave, mail y sync opcional -->
 <script>
-/* ===== CONFIG: UMBRALES y ENDPOINTS opcionales ===== */
+/* =================== CONFIG =================== */
 const UMBRALES = { a1c_max: 7.0, ldl_max: 70, tas_max: 130, tad_max: 80, bmi_min: 18.5, bmi_max: 25 };
-const PATIENT_SYNC_URL = "";   // Si tenés backend para sincronizar la app del paciente (POST JSON)
-const MAIL_WEBHOOK_URL = "";   // Si tenés webhook para enviar mail desde servidor (POST JSON)
-/* =================================================== */
+const PATIENT_SYNC_URL = "";   // opcional: backend para sincronizar la app del paciente (POST JSON)
+const MAIL_WEBHOOK_URL = "";   // opcional: webhook para enviar correo desde servidor (POST JSON)
+const STORAGE_KEY = 'INTERPF_DBT2_FICHA';
+const THEME_KEY = 'INTERPF_THEME';
+/* ============================================== */
 
 const $ = (id) => document.getElementById(id);
 const form = $('ficha-ingreso');
 
-/* Edad auto */
+/* ===== THEME ===== */
+initTheme();
+$('btn-theme').addEventListener('click', ()=>{
+  document.body.classList.toggle('light');
+  const light = document.body.classList.contains('light');
+  $('btn-theme').textContent = light ? '🌞' : '🌙';
+  localStorage.setItem(THEME_KEY, light ? 'light' : 'dark');
+});
+function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY);
+  if(saved === 'light'){ document.body.classList.add('light'); $('btn-theme').textContent='🌞'; }
+  else { $('btn-theme').textContent='🌙'; }
+}
+
+/* ===== Edad auto ===== */
 $('fnac').addEventListener('change', ()=> {
   const v = $('fnac').value;
   if (!v) return $('edad-auto').value = '';
@@ -384,7 +432,7 @@ $('fnac').addEventListener('change', ()=> {
   $('edad-auto').value = isFinite(edad) ? edad : '';
 });
 
-/* BMI / Relación cintura-altura */
+/* ===== BMI / Relación cintura-altura ===== */
 ['altura','peso','cintura'].forEach(id => $(id).addEventListener('input', calcBody));
 function calcBody(){
   const h = parseFloat($('altura').value || '0');
@@ -396,14 +444,16 @@ function calcBody(){
   updateKPI();
 }
 
-/* KPI / Estado */
+/* ===== KPI ===== */
 $('ta').addEventListener('input', updateKPI);
 ['a1c','ldl','prox'].forEach(id => $(id).addEventListener('input', updateKPI));
+
 function updateKPI(){
   const a1c = parseFloat($('a1c').value);
   const ldl = parseFloat($('ldl').value);
   const bmi = parseFloat($('bmi').value);
   const ta = $('ta').value.trim();
+
   $('kpi-a1c').textContent = isNaN(a1c)?'—':a1c.toFixed(1);
   $('kpi-ldl').textContent = isNaN(ldl)?'—':ldl.toFixed(0);
   $('kpi-bmi').textContent = isNaN(bmi)?'—':bmi.toFixed(1);
@@ -438,14 +488,14 @@ function flag(id, ok){
   el.className = 'flag ' + (ok ? 'green' : 'red');
 }
 
-/* Guardar/Imprimir */
+/* ===== Guardar / Imprimir ===== */
 $('btn-print').addEventListener('click', ()=> window.print());
 $('btn-save').addEventListener('click', saveDraft);
 
-/* Autosave local */
-const STORAGE_KEY = 'INTERPF_DBT2_FICHA';
+/* ===== Autosave local ===== */
 restoreDraft();
 form.addEventListener('input', debounce(saveDraft, 400));
+
 function saveDraft(e){
   const data = getPayload();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -464,7 +514,7 @@ function restoreDraft(){
   calcBody(); updateKPI();
 }
 
-/* Submit: sincroniza app del paciente si hay endpoint */
+/* ===== Submit: sincroniza app del paciente si hay endpoint ===== */
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   updateKPI();
@@ -472,10 +522,10 @@ form.addEventListener('submit', async (e)=>{
   alert('Ficha guardada. (Sincronización realizada si fue configurada).');
 });
 
-/* Botón: Enviar mail al paciente */
+/* ===== Enviar mail al paciente ===== */
 $('btn-mail').addEventListener('click', async ()=>{
   const data = getPayload();
-  // Mailto local
+  // Mailto local (abre tu cliente)
   const to = data.mail || "";
   const subject = encodeURIComponent(`Seguimiento y próximo control – ${data.nombre || ''}`);
   const body = encodeURIComponent(
@@ -502,7 +552,7 @@ ${data['med-trat'] || 'Su equipo médico'}`);
   }
 });
 
-/* Sincronizar app del paciente (fecha, tipo, indicaciones, objetivos) */
+/* ===== Sync app del paciente ===== */
 async function syncPatientApp(){
   if (!PATIENT_SYNC_URL) return;
   const subset = {
@@ -519,7 +569,7 @@ async function syncPatientApp(){
   }catch(e){ console.warn('PATIENT_SYNC_URL falló:', e); }
 }
 
-/* Utilidades */
+/* ===== Utils ===== */
 function getPayload(){
   const data = Object.fromEntries(new FormData(form).entries());
   data.bmi = $('bmi').value;
