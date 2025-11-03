@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/stca-dm2-medico-GPT/', // 👈 importante: nombre del repo entre barras
+  base: '/stca-dm2-medico-GPT/', // ← importantísimo
 })
