@@ -434,4 +434,10 @@ export default function App() {
 
       {/* pie impresión */}
       <footer className="print-footer only-print">
+                <p>STCA – DM2 · Plataforma del Médico</p>
+      </footer>
+    </div>
+  );
+}
+
        
