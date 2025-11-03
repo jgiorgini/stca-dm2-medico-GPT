@@ -3,9 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <title>INTERPF - Ficha de Ingreso y Seguimiento DBT2</title>
-  <link rel="stylesheet" href="style-dbt.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Estilos embebidos (Century Gothic + estética aireada) -->
+  <style>
+  :root{
+    --bg:#0f1420; --panel:#111a28; --panel-2:#0d1522; --text:#eef3f7; --muted:#9fb1c4; --line:#1c2a3d;
+    --accent:#69b4ff; --accent-strong:#a8d4ff; /* Títulos AZUL por defecto */
+    --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+  }
+  body.accent-green{ --accent:#5eead4; --accent-strong:#99f6e4; } /* Títulos VERDES si agregás esta clase */
+
+  @font-face{
+    font-family:"Century Gothic";
+    src: local("Century Gothic"), local("CenturyGothic");
+    font-weight: 300 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *{ box-sizing:border-box }
+  html,body{ height:100% }
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"Century Gothic","CenturyGothic","AppleGothic","URW Gothic L","Avant Garde",Arial,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  }
+
+  .container{ max-width:1100px; margin:28px auto; padding:0 18px }
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line); border-radius:18px; padding:24px;
+    margin:20px 0 26px; box-shadow:0 14px 28px rgba(0,0,0,.24), 0 10px 10px rgba(0,0,0,.18)
+  }
+
+  .app-header{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:16px 18px; border-bottom:1px solid var(--line);
+    background:rgba(0,0,0,.18); backdrop-filter:blur(4px)
+  }
+  .app-header h1{ font-size:22px; font-weight:700; letter-spacing:.2px; margin:0; color:var(--accent-strong) }
+  .header-actions{ display:flex; gap:10px }
+
+  h2{ margin:0 0 14px; font-size:20px; font-weight:700; letter-spacing:.2px; color:var(--accent) }
+  h3{ margin:18px 0 12px; font-size:16px; font-weight:700; color:var(--accent-strong) }
+
+  .title-right{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 0 12px
+  }
+  .title-right .title-link{
+    color:var(--accent-strong); text-decoration:none; font-weight:700;
+    border:1px solid var(--line); padding:6px 10px; border-radius:10px;
+    background:rgba(105,180,255,.10)
+  }
+  .title-right .title-link:hover{ filter:brightness(1.1) }
+
+  .muted{ color:var(--muted); font-size:13px }
+  hr{ border:none; border-top:1px solid var(--line); margin:20px 0 10px }
+
+  label{ display:flex; flex-direction:column; gap:8px; font-size:13px; align-items:flex-start }
+  input,select,textarea{
+    width:100%; background:#0a1322; border:1px solid var(--line); color:var(--text);
+    padding:12px 12px; border-radius:12px; font-size:14px;
+    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease
+  }
+  input::placeholder,textarea::placeholder{ color:#8aa0b4a0 }
+  input:focus,select:focus,textarea:focus{
+    outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(105,180,255,.18); background:#0c1830
+  }
+  textarea{ min-height:96px; resize:vertical }
+
+  .grid2,.grid3,.grid4{ align-items:start }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px 16px }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px 16px }
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px 16px }
+  .inline{ display:flex; align-items:center; gap:10px }
+  .chk{ display:flex; align-items:center; gap:10px }
+
+  #kpis .kpi-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px }
+  .kpi{ background:#0a1322; border:1px solid var(--line); border-radius:14px; padding:14px }
+  .kpi span{ display:block; color:#bfd3e4; font-size:12px; margin-bottom:6px }
+  .kpi strong{ font-size:22px; letter-spacing:.3px }
+  .flag{ float:right; padding:4px 10px; border-radius:999px; border:1px solid var(--line); font-size:12px; margin-top:-2px }
+  .flag.green{ background:rgba(34,197,94,.16); border-color:#14532d }
+  .flag.red{ background:rgba(239,68,68,.16); border-color:#7f1d1d }
+  .flag.gray{ background:#0a1322 }
+
+  button{
+    appearance:none; background:#132136; color:var(--text); border:1px solid var(--line);
+    padding:10px 14px; border-radius:12px; cursor:pointer;
+    transition:transform .05s, filter .15s, background .15s
+  }
+  button:hover{ filter:brightness(1.08) }
+  button:active{ transform:translateY(1px) }
+  button.primary{ background:var(--accent); color:#07111f; border-color:transparent; font-weight:700 }
+  button.danger{ background:var(--danger); color:#fff; border-color:transparent }
+  .actions{ display:flex; gap:12px; margin-top:10px; flex-wrap:wrap }
+
+  .medication-list-vertical{ display:grid; gap:10px }
+  .med-item{
+    display:grid; grid-template-columns:26px 1fr 200px 140px;
+    align-items:center; gap:12px; padding:12px 14px;
+    border:1px dashed var(--line); border-radius:12px; background:rgba(255,255,255,0.02)
+  }
+  .med-item label{ margin:0 }
+  .input-dosis,.input-frec{ width:100% }
+
+  .textarea-wide{ min-height:140px }
+  .full-width{ grid-column:1 / -1 }
+
+  .only-print{ display:none }
+  @media print{
+    .no-print{ display:none!important }
+    body{ background:#fff; color:#000 }
+    .container{ max-width:none; margin:0; padding:0 }
+    .card{ background:#fff; border:none; box-shadow:none }
+    input,select,textarea{ border:1px solid #cfcfcf; background:#fff; color:#000 }
+    h2,h3{ color:#0b3d91 }
+    .only-print{ display:block }
+    .print-footer{ margin:14px 16px; font-size:12px; color:#333 }
+  }
+  @media (max-width:1080px){ .grid4{ grid-template-columns:repeat(2,1fr) } }
+  @media (max-width:860px){ .grid3{ grid-template-columns:1fr 1fr } #kpis .kpi-grid{ grid-template-columns:1fr 1fr } }
+  @media (max-width:640px){
+    .grid2,.grid3,.grid4{ grid-template-columns:1fr }
+    .med-item{ grid-template-columns:26px 1fr }
+    .input-dosis,.input-frec{ margin-top:6px }
+  }
+  </style>
 </head>
+
 <body>
 <header class="app-header no-print">
   <h1>INTERPF · Ficha de Ingreso y Seguimiento DBT2 (Dr. Giorgini)</h1>
@@ -25,7 +151,7 @@
       <div class="kpi"><span>PA (mmHg)</span><strong id="kpi-ta">—</strong><em id="kpi-ta-flag" class="flag gray">—</em></div>
       <div class="kpi"><span>BMI (kg/m²)</span><strong id="kpi-bmi">—</strong><em id="kpi-bmi-flag" class="flag gray">—</em></div>
     </div>
-    <p class="muted">Los umbrales son editables en el bloque de configuración del script.</p>
+    <p class="muted">Umbrales configurables en el script (al final del archivo).</p>
   </section>
 
   <form id="ficha-ingreso" class="card">
@@ -78,7 +204,7 @@
       <label>BMI (auto)
         <div class="inline">
           <input id="bmi" type="text" readonly>
-          <a class="link" href="https://www.mdcalc.com/calc/29/body-mass-index-bmi-body-surface-area-bsa" target="_blank">MDCalc</a>
+          <a class="title-link" href="https://www.mdcalc.com/calc/29/body-mass-index-bmi-body-surface-area-bsa" target="_blank">MDCalc</a>
         </div>
       </label>
       <label>Perím. cintura (cm)<input id="cintura" name="cintura" type="number" step="0.1"></label>
@@ -125,7 +251,7 @@
     <h2>D. Tratamiento actual (lista detallada)</h2>
     <p class="muted">Marque las drogas que usa el paciente y complete dosis y frecuencia.</p>
 
-    <!-- === LISTA DE DROGAS (tu listado) === -->
+    <!-- Lista de drogas -->
     <div class="medication-list-vertical">
       <h3>1. Hipoglucemiantes Orales</h3>
       <div class="med-item"><input type="checkbox" id="metf"><label for="metf">Metformina (Biguanida)</label><input type="text" placeholder="Dosis (mg)" class="input-dosis"><input type="number" placeholder="Veces/día" class="input-frec"></div>
@@ -185,7 +311,6 @@
       <div class="med-item"><input type="checkbox" id="omep"><label for="omep">Omeprazol / IBP</label><input type="text" placeholder="Dosis (mg)" class="input-dosis"><input type="number" placeholder="Veces/día" class="input-frec"></div>
       <div class="med-item"><input type="checkbox" id="otro"><label for="otro">Otra medicación (especifique):</label><input type="text" placeholder="Nombre/Dosis" class="input-dosis"><input type="number" placeholder="Veces/día" class="input-frec"></div>
     </div>
-    <!-- === FIN LISTA DE DROGAS === -->
 
     <hr>
     <h2>E. Examen físico y laboratorio</h2>
@@ -217,8 +342,13 @@
       <label>Estado<input id="estado" type="text" readonly></label>
     </div>
 
-    <label>Indicaciones (INTERPAC)<textarea id="indic" name="indic" rows="3" placeholder="Estas indicaciones se verán en la plataforma del paciente."></textarea></label>
-    <label>Objetivos para el próximo control<textarea id="objet" name="objet" rows="2" placeholder="Ej.: HbA1c < 7.0, bajar 1 kg…"></textarea></label>
+    <label class="full-width">Indicaciones (INTERPAC)
+      <textarea id="indic" name="indic" class="textarea-wide" placeholder="Estas indicaciones se verán en la plataforma del paciente."></textarea>
+    </label>
+
+    <label class="full-width">Objetivos para el próximo control
+      <textarea id="objet" name="objet" class="textarea-wide" placeholder="Ej.: HbA1c < 7.0, bajar 1 kg…"></textarea>
+    </label>
 
     <div class="actions">
       <button type="submit" class="primary">Guardar ficha</button>
@@ -232,17 +362,18 @@
   <p>INTERPF – Seguimiento DBT2 · Dr. Julio C. Giorgini</p>
 </footer>
 
+<!-- Lógica: cálculos, semáforos, autosave, mail y sync opcional -->
 <script>
 /* ===== CONFIG: UMBRALES y ENDPOINTS opcionales ===== */
 const UMBRALES = { a1c_max: 7.0, ldl_max: 70, tas_max: 130, tad_max: 80, bmi_min: 18.5, bmi_max: 25 };
-const PATIENT_SYNC_URL = "";   // ← si tienes backend para sincronizar la app del paciente (POST JSON)
-const MAIL_WEBHOOK_URL = "";   // ← si tienes webhook para enviar el mail desde servidor (POST JSON)
+const PATIENT_SYNC_URL = "";   // Si tenés backend para sincronizar la app del paciente (POST JSON)
+const MAIL_WEBHOOK_URL = "";   // Si tenés webhook para enviar mail desde servidor (POST JSON)
 /* =================================================== */
 
 const $ = (id) => document.getElementById(id);
 const form = $('ficha-ingreso');
 
-/* Edad */
+/* Edad auto */
 $('fnac').addEventListener('change', ()=> {
   const v = $('fnac').value;
   if (!v) return $('edad-auto').value = '';
@@ -267,7 +398,7 @@ function calcBody(){
 
 /* KPI / Estado */
 $('ta').addEventListener('input', updateKPI);
-['a1c','ldl','prox','tipo-ctrl','indic','objet'].forEach(id => $(id).addEventListener('input', updateKPI));
+['a1c','ldl','prox'].forEach(id => $(id).addEventListener('input', updateKPI));
 function updateKPI(){
   const a1c = parseFloat($('a1c').value);
   const ldl = parseFloat($('ldl').value);
@@ -291,7 +422,7 @@ function updateKPI(){
   const okBMI = Number.isFinite(bmi) && bmi >= UMBRALES.bmi_min && bmi <= UMBRALES.bmi_max;
   flag('kpi-bmi-flag', okBMI);
 
-  // Estado
+  // Estado por fecha próxima
   const prox = $('prox').value;
   if (prox){
     const d = Math.ceil((new Date(prox) - new Date())/(1000*60*60*24));
@@ -307,11 +438,11 @@ function flag(id, ok){
   el.className = 'flag ' + (ok ? 'green' : 'red');
 }
 
-/* Guardar e imprimir */
+/* Guardar/Imprimir */
 $('btn-print').addEventListener('click', ()=> window.print());
 $('btn-save').addEventListener('click', saveDraft);
 
-/* Autosave */
+/* Autosave local */
 const STORAGE_KEY = 'INTERPF_DBT2_FICHA';
 restoreDraft();
 form.addEventListener('input', debounce(saveDraft, 400));
@@ -333,18 +464,18 @@ function restoreDraft(){
   calcBody(); updateKPI();
 }
 
-/* Envío / sincronización */
+/* Submit: sincroniza app del paciente si hay endpoint */
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   updateKPI();
-  await syncPatientApp();  // actualiza app del paciente (si hay endpoint)
+  await syncPatientApp();
   alert('Ficha guardada. (Sincronización realizada si fue configurada).');
 });
 
 /* Botón: Enviar mail al paciente */
 $('btn-mail').addEventListener('click', async ()=>{
   const data = getPayload();
-  // 1) Mailto local (abre el cliente del usuario)
+  // Mailto local
   const to = data.mail || "";
   const subject = encodeURIComponent(`Seguimiento y próximo control – ${data.nombre || ''}`);
   const body = encodeURIComponent(
@@ -361,9 +492,9 @@ ${data.objet || '-'}
 Saludos,
 ${data['med-trat'] || 'Su equipo médico'}`);
 
-  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  if (to) window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
 
-  // 2) (Opcional) Envío por webhook si fue configurado
+  // (Opcional) Envío por webhook
   if (MAIL_WEBHOOK_URL){
     try{
       await fetch(MAIL_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,subject,body})});
