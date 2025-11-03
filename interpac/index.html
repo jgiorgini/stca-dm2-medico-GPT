@@ -264,7 +264,12 @@ END:VCALENDAR`;
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./service-worker.js");
   }
+    <button id="btn-install" style="display:none">Instalar app</button>
+<script type="module">
+  import { installApp } from './interpac.js';
+  document.getElementById('btn-install').addEventListener('click', installApp);
   </script>
 </body>
 </html>
+
 
