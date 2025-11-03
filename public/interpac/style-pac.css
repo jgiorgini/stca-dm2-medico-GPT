@@ -1,0 +1,195 @@
+/* =====================================================
+   INTERPAC – Estilo visual (modo claro, paciente)
+   Autor: Dr. Julio Giorgini · Diseño ChatGPT 2025
+   ===================================================== */
+
+:root {
+  --bg: #f7fafc;
+  --panel: #ffffff;
+  --line: #d8e2ee;
+  --text: #0f172a;
+  --muted: #475569;
+  --accent: #0b72ff;
+  --accent-strong: #0753bf;
+  --ok: #16a34a;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+}
+
+@font-face {
+  font-family: "Century Gothic";
+  src: local("Century Gothic"), local("CenturyGothic");
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Century Gothic", "AppleGothic", "URW Gothic L", "Avant Garde", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
+}
+
+.container {
+  max-width: 860px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+/* ---------------- Header ---------------- */
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 14px 0;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--accent-strong);
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------------- Cards ---------------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 14px 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.big-text {
+  font-size: 16px;
+  margin: 6px 0;
+}
+
+.big-date {
+  font-size: 16px;
+  margin: 4px 0 0;
+}
+
+.content-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.content-box p {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ---------------- Pills (chips) ---------------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #eef4ff;
+  color: #0b3d91;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ---------------- Buttons ---------------- */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button,
+a.button {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #eef4ff;
+  color: #0b3d91;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 14px;
+  transition: filter 0.2s ease, background 0.2s ease;
+}
+
+button.primary,
+a.button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+button:hover,
+a.button:hover {
+  filter: brightness(1.08);
+}
+
+/* ---------------- Text and Footer ---------------- */
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.foot {
+  margin: 10px 2px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* ---------------- Responsividad ---------------- */
+@media (max-width: 520px) {
+  header h1 {
+    font-size: 20px;
+  }
+
+  .pill {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  button,
+  a.button {
+    width: 100%;
+  }
+}

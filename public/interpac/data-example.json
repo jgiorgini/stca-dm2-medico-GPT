@@ -1,0 +1,18 @@
+{
+  "name": "Ana Pérez",
+  "mode": "Mail",
+  "date": "2025-12-15",
+  "indic": [
+    "Metformina 850 mg cada 12 h",
+    "Caminar 30 minutos diarios (lunes a viernes)",
+    "Evitar azúcares refinadas y harinas blancas"
+  ],
+  "goals": [
+    "HbA1c < 7.5%",
+    "Perder 1 kg antes del próximo control",
+    "Glucemia en ayunas entre 100 y 130 mg/dL"
+  ],
+  "doctor": "Dr. Julio Giorgini",
+  "email": "seguimiento@hospital.com",
+  "phone": "11-5555-5555"
+}
