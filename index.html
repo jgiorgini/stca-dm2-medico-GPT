@@ -1,12 +1,314 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>STCA – DM2 · Plataforma del Médico</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>INTERPF - Ficha de Ingreso y Seguimiento DBT2</title>
+  <link rel="stylesheet" href="style-dbt.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<header class="app-header no-print">
+  <h1>INTERPF · Ficha de Ingreso y Seguimiento DBT2 (Dr. Giorgini)</h1>
+  <div class="header-actions">
+    <button type="button" id="btn-save">Guardar</button>
+    <button type="button" id="btn-print">Imprimir / PDF</button>
+  </div>
+</header>
+
+<main class="container">
+  <!-- KPIs / Semáforos -->
+  <section id="kpis" class="card no-print">
+    <h2>Semáforos clínicos</h2>
+    <div class="kpi-grid">
+      <div class="kpi"><span>HbA1c</span><strong id="kpi-a1c">—</strong><em id="kpi-a1c-flag" class="flag gray">—</em></div>
+      <div class="kpi"><span>LDL (mg/dL)</span><strong id="kpi-ldl">—</strong><em id="kpi-ldl-flag" class="flag gray">—</em></div>
+      <div class="kpi"><span>PA (mmHg)</span><strong id="kpi-ta">—</strong><em id="kpi-ta-flag" class="flag gray">—</em></div>
+      <div class="kpi"><span>BMI (kg/m²)</span><strong id="kpi-bmi">—</strong><em id="kpi-bmi-flag" class="flag gray">—</em></div>
+    </div>
+    <p class="muted">Los umbrales son editables en el bloque de configuración del script.</p>
+  </section>
+
+  <form id="ficha-ingreso" class="card">
+    <h2>A. Datos identificatorios y logísticos</h2>
+    <div class="grid2">
+      <label>Fecha de inicio<input id="ini" type="date" required></label>
+      <label>Lugar<input id="lugar" type="text" value="Hospital Alemán" required></label>
+
+      <label>Nombre y Apellido<input id="nombre" type="text" required></label>
+      <label>Documento de identidad<input id="dni" type="text" required></label>
+
+      <label>Fecha de nacimiento<input id="fnac" type="date"></label>
+      <label>Edad (auto)<input id="edad-auto" type="text" placeholder="Automático" readonly></label>
+
+      <label>Sexo
+        <select id="sexo">
+          <option value=""></option><option>Femenino</option><option>Masculino</option><option>Otro</option>
+        </select>
+      </label>
+      <label>Médico tratante<input id="med-trat" type="text" value="Dr. Julio Giorgini"></label>
+    </div>
+
+    <div class="grid3">
+      <label>Dirección / Ciudad<input id="direccion" type="text"></label>
+      <label>Teléfono<input id="tel" type="tel"></label>
+      <label>Mail<input id="mail" type="email"></label>
+    </div>
+
+    <hr>
+    <h2>B. Antecedentes y factores de riesgo modificables</h2>
+    <div class="grid3">
+      <label>Años de Dx DBT<input id="anios-dbt" type="number" min="0" step="1"></label>
+      <label>Tipo de diabetes
+        <select id="tipo-dbt"><option>Tipo 2</option><option>Tipo 1</option></select>
+      </label>
+      <label>Antecedentes CV<input id="ant-cv" type="text" placeholder="IAM, ACV, IC, etc."></label>
+      <label>VIH
+        <select id="vih"><option>No</option><option>Sí</option></select>
+      </label>
+    </div>
+
+    <h3>Parámetros antropométricos</h3>
+    <div class="grid4">
+      <label>Altura (m)<input id="altura" type="number" step="0.01"></label>
+      <label>Peso (kg)<input id="peso" type="number" step="0.1"></label>
+      <label>BMI (auto)
+        <div class="inline">
+          <input id="bmi" type="text" readonly>
+          <a class="link" href="https://www.mdcalc.com/calc/29/body-mass-index-bmi-body-surface-area-bsa" target="_blank">MDCalc</a>
+        </div>
+      </label>
+      <label>Perím. cintura (cm)<input id="cintura" type="number" step="0.1"></label>
+      <label>Rel. cintura/altura (auto)<input id="rel-ca" type="text" readonly></label>
+    </div>
+
+    <h3>Estilo de vida</h3>
+    <div class="grid3">
+      <label>Tabaquismo
+        <select id="tabaco"><option>Actual</option><option>Ex-fumador</option><option>Nunca</option></select>
+      </label>
+      <label>Alcohol
+        <select id="alcohol"><option>Abstinente</option><option>Social</option><option>Riesgo</option></select>
+      </label>
+      <label class="chk"><input id="fv" type="checkbox"> Dieta: frutas y verduras diarias</label>
+      <label class="chk"><input id="azucares" type="checkbox"> Dieta: azúcares diarios</label>
+      <label class="chk"><input id="carb" type="checkbox"> Conteo de carbohidratos correcto</label>
+      <label class="chk"><input id="aerobico" type="checkbox"> Ejercicio aeróbico ≥150 min/sem</label>
+    </div>
+
+    <div class="grid3">
+      <label>Antecedentes quirúrgicos<textarea id="qx" rows="1"></textarea></label>
+      <label>Internaciones (causas)<textarea id="intern" rows="1"></textarea></label>
+      <label>Patología respiratoria<textarea id="resp" rows="1"></textarea></label>
+    </div>
+
+    <hr>
+    <h2>C. Psicosocial y sueño</h2>
+    <div class="grid3">
+      <label>Vive solo / con familia<input id="conviv" type="text" placeholder="Con quién vive si aplica"></label>
+      <label>Nivel de escolaridad
+        <select id="esco"><option>Primario</option><option>Secundario</option><option>Terciario/Univ.</option></select>
+      </label>
+      <label class="chk"><input id="vuln" type="checkbox"> Vivienda en zona vulnerable</label>
+      <label class="chk"><input id="planes" type="checkbox"> Recibe planes sociales</label>
+    </div>
+
+    <div class="grid3">
+      <label>Horas de sueño<input id="sueno" type="number" step="0.5"></label>
+      <label>STOP-BANG
+        <div class="inline">
+          <input id="stopbang" type="text" placeholder="Puntaje (0–8)">
+          <a class="link" href="https://www.mdcalc.com/calc/3992/stop-bang-score-obstructive-sleep-apnea" target="_blank">MDCalc</a>
+        </div>
+      </label>
+      <label>PHQ-2
+        <div class="inline">
+          <input id="phq2" type="text" placeholder="0–6">
+          <a className="link" href="https://aidsetc.org/sites/default/files/resources_files/PHQ-2_Spanish.pdf" target="_blank">Guía</a>
+        </div>
+      </label>
+    </div>
+
+    <hr>
+    <h2>D. Tratamiento actual (resumen)</h2>
+    <p class="muted">Sigue siendo válido tu listado completo. Aquí dejamos un resumen libre; si deseas, puedo agregarte selectores rápidos tipo “presets”.</p>
+    <textarea id="tratamiento" rows="3" placeholder="Ej.: Metformina 850 mg c/12h, Dapa 10 mg/d, Atorva 40 mg/noche…"></textarea>
+
+    <hr>
+    <h2>E. Examen físico y laboratorio</h2>
+    <div class="grid3">
+      <label>FC (lpm)<input id="fc" type="number" min="0"></label>
+      <label>TA (mmHg: 120/70)<input id="ta" type="text" placeholder="Ej.: 130/80"></label>
+    </div>
+
+    <h3>Laboratorio</h3>
+    <div class="grid3">
+      <label>HbA1c %<input id="a1c" type="number" step="0.1"></label>
+      <label>LDL mg/dL<input id="ldl" type="number" step="1"></label>
+      <label>Glucemia mg/dL<input id="gluc" type="number" step="1"></label>
+      <label>Urea<input id="urea" type="text"></label>
+      <label>Creatinina<input id="creat" type="text"></label>
+      <label>TSH<input id="tsh" type="text"></label>
+      <label>PCR<input id="pcr" type="text"></label>
+      <label>Ferritina<input id="ferritina" type="text"></label>
+      <label>Vitamina D<input id="vitd" type="text"></label>
+    </div>
+
+    <hr>
+    <h2>F. Plan de seguimiento</h2>
+    <div class="grid3">
+      <label>Próximo control
+        <select id="tipo-ctrl"><option>Presencial</option><option>Virtual (Zoom/Video)</option><option>Mail</option></select>
+      </label>
+      <label>Fecha de control (alarma)<input id="prox" type="date" required></label>
+      <label>Estado<input id="estado" type="text" readonly></label>
+    </div>
+
+    <label>Indicaciones (INTERPAC)<textarea id="indic" rows="3" placeholder="Estas indicaciones se verán en la plataforma del paciente."></textarea></label>
+    <label>Objetivos para el próximo control<textarea id="objet" rows="2" placeholder="Ej.: HbA1c < 7.0, bajar 1 kg…"></textarea></label>
+
+    <div class="actions">
+      <button type="submit" class="primary">Guardar ficha</button>
+      <button type="button" id="btn-clear">Limpiar</button>
+    </div>
+  </form>
+</main>
+
+<footer class="print-footer only-print">
+  <p>INTERPF – Seguimiento DBT2 · Dr. Julio C. Giorgini</p>
+</footer>
+
+<script>
+/* ===== CONFIGURACIÓN DE UMBRALES (editar si querés) ===== */
+const UMBRALES = {
+  a1c_max: 7.0,
+  ldl_max: 70,
+  tas_max: 130,
+  tad_max: 80,
+  bmi_min: 18.5,
+  bmi_max: 25
+};
+/* ======================================================== */
+
+const $ = (id) => document.getElementById(id);
+const form = $('ficha-ingreso');
+
+/* Cálculo edad */
+$('fnac').addEventListener('change', () => {
+  const v = $('fnac').value;
+  if (!v) return $('edad-auto').value = '';
+  const d = new Date(v), t = new Date();
+  let edad = t.getFullYear() - d.getFullYear();
+  const m = t.getMonth() - d.getMonth();
+  if (m < 0 || (m === 0 && t.getDate() < d.getDate())) edad--;
+  $('edad-auto').value = isFinite(edad) ? edad : '';
+});
+
+/* BMI y Cintura/Altura */
+['altura','peso','cintura'].forEach(id => $(id).addEventListener('input', calcBody));
+function calcBody(){
+  const h = parseFloat($('altura').value || '0');
+  const w = parseFloat($('peso').value || '0');
+  const c = parseFloat($('cintura').value || '0');
+  const bmi = (h>0 && w>0) ? (w/(h*h)) : NaN;
+  $('bmi').value = isNaN(bmi) ? '' : (Math.round(bmi*10)/10);
+  $('rel-ca').value = (h>0 && c>0) ? (Math.round((c/(h*100))*10)/10) : '';
+  updateKPI(); // también actualiza semáforos
+}
+
+/* TA parse y estado */
+$('ta').addEventListener('input', updateKPI);
+['a1c','ldl'].forEach(id => $(id).addEventListener('input', updateKPI));
+
+function updateKPI(){
+  const a1c = parseFloat($('a1c').value);
+  const ldl = parseFloat($('ldl').value);
+  const bmi = parseFloat($('bmi').value);
+  const ta = $('ta').value.trim();
+  $('kpi-a1c').textContent = isNaN(a1c)?'—':a1c.toFixed(1);
+  $('kpi-ldl').textContent = isNaN(ldl)?'—':ldl.toFixed(0);
+  $('kpi-bmi').textContent = isNaN(bmi)?'—':bmi.toFixed(1);
+  $('kpi-ta').textContent = ta || '—';
+
+  flag('kpi-a1c-flag', !isNaN(a1c) && a1c <= UMBRALES.a1c_max);
+  flag('kpi-ldl-flag', !isNaN(ldl) && ldl <= UMBRALES.ldl_max);
+
+  let okPA = false;
+  if (ta && ta.includes('/')){
+    const [tas,tad] = ta.split('/').map(x=>parseInt(x,10));
+    okPA = Number.isFinite(tas) && Number.isFinite(tad) && tas < UMBRALES.tas_max && tad < UMBRALES.tad_max;
+  }
+  flag('kpi-ta-flag', okPA);
+
+  const okBMI = Number.isFinite(bmi) && bmi >= UMBRALES.bmi_min && bmi <= UMBRALES.bmi_max;
+  flag('kpi-bmi-flag', okBMI);
+
+  // Estado por próxima fecha
+  const prox = $('prox').value;
+  if (prox){
+    const d = Math.ceil((new Date(prox) - new Date())/(1000*60*60*24));
+    $('estado').value = isFinite(d) ? (d >= 0 ? 'al día' : 'atrasado') : 'sin fecha';
+  } else {
+    $('estado').value = 'sin fecha';
+  }
+}
+
+function flag(id, ok){
+  const el = $(id);
+  el.textContent = ok ? 'OK' : 'Revisar';
+  el.className = 'flag ' + (ok ? 'green' : 'red');
+  if (ok==null) { el.textContent = '—'; el.className = 'flag gray'; }
+}
+
+/* Guardar/Imprimir */
+$('btn-print').addEventListener('click', ()=> window.print());
+$('btn-save').addEventListener('click', saveDraft);
+
+/* Autosave/restore */
+const STORAGE_KEY = 'INTERPF_DBT2_FICHA';
+restoreDraft();
+form.addEventListener('input', debounce(saveDraft, 400));
+
+function saveDraft(e){
+  const data = Object.fromEntries(new FormData(form).entries());
+  // agrego algunos que son readonly/derivados
+  data.bmi = $('bmi').value;
+  data.rel_ca = $('rel-ca').value;
+  data.edad = $('edad-auto').value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  if (e?.type==='click') alert('Borrador guardado en este equipo.');
+}
+function restoreDraft(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  const data = JSON.parse(raw);
+  for (const [k,v] of Object.entries(data)){
+    const el = document.querySelector(`[name="${k}"]`) || $(k);
+    if (!el) continue;
+    if (el.type==='checkbox') el.checked = v === 'on' || v === true;
+    else el.value = v;
+  }
+  calcBody(); updateKPI();
+}
+
+/* Envío del formulario */
+form.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  updateKPI();
+  alert('Ficha guardada localmente. (Podemos integrarla a correo/webhook cuando quieras).');
+});
+
+/* Limpiar */
+$('btn-clear').addEventListener('click', ()=>{
+  if (!confirm('¿Limpiar todos los campos?')) return;
+  form.reset();
+  localStorage.removeItem(STORAGE_KEY);
+  calcBody(); updateKPI();
+});
+
+/* Utilidad */
+function debounce(fn, ms=300){
+  let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), ms); };
+}
+</script>
+</body>
 </html>
