@@ -183,6 +183,24 @@ async function bootstrap(){
     render(next);
   });
 }
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById("btn-install");
+  if (btn) btn.style.display = "inline-flex";
+});
+
+export async function installApp(){
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  const btn = document.getElementById("btn-install");
+  if (btn) btn.style.display = "none";
+}
 
 // Inicial
 document.addEventListener("DOMContentLoaded", bootstrap);
+
