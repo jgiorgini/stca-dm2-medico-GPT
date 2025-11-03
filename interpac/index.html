@@ -58,6 +58,13 @@
       .pill{width:100%;justify-content:center}
       .actions{flex-direction:column}
       button,a.button{width:100%}
+      <link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b72ff">
+<link rel="icon" href="icons/icon-192.png">
+<!-- Opcional iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="INTERPAC">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
     }
   </style>
 </head>
@@ -254,6 +261,10 @@ END:VCALENDAR`;
     }
 
     fromEmbedded();
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js");
+  }
   </script>
 </body>
 </html>
+
